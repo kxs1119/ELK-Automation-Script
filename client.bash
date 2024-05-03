@@ -6,6 +6,8 @@
 
 if [ -n "$INSTALL_ELASTICSEARCH" ]; then
     ./install.bash
+    ./install_unit.bash
+
 fi
 
 # This section will run the configure.bash file within a condition variable
@@ -13,6 +15,7 @@ fi
 # If the condition variable is not set to true, the configure.bash file will not be run
 
 if [ -n "$CONFIGURE_ELASTICSEARCH" ]; then
+    
     ./configure.bash
 fi
 
