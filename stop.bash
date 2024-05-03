@@ -1,5 +1,5 @@
 # This script will end the ELK Stack if the stack is already running
-# https://man7.org/linux/man-pages/man1/pgrep.1.html
+#  Reference on using pgrep: https://man7.org/linux/man-pages/man1/pgrep.1.html
 
 # Check if Elasticsearch is running
 if pgrep -x "java -Xms1g -Xmx1g" > /dev/null; then

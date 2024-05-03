@@ -3,6 +3,8 @@ This script will be used to test the ELK stack by starting and intergrating thet
 Kibana
 Elasticsearch
 Logstash
+
+References: https://stackoverflow.com/questions/12199059/how-to-check-if-an-url-exists-with-the-shell-and-probably-curl
 Comment
 
 
