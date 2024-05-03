@@ -1,51 +1,41 @@
-#!/bin/bash
-# Create a script that will install the ELK Stack such as Elasticsearch, Kubana, Logstash, and Beats
+# This bash script will run step by step the following bash commands to run the ELK Stack
 
-# Update the system
-sudo apt-get update && sudo apt-get upgrade -y
+# This section will run the install.bash file within a condition variable
+# If the condition variable is set to true, the install.bash file will be run
+# If the condition variable is not set to true, the install.bash file will not be run
 
-# Install Docker
-sudo apt-get install docker.io -y
-
-# Conditional to install elasticsearch if it is not already installed
-if ! [ -x "$(command -v elasticsearch)" ]; then
-  echo 'Installing Elasticsearch'
-  sudo apt-get install openjdk-8-jdk -y
-  sudo apt install elasticsearch
-else
-  echo 'Elasticsearch is already installed'
+if [ -n "$INSTALL_ELASTICSEARCH" ]; then
+    ./install.bash
 fi
 
-# Conditional to install kibana if it is not already installed
-if ! [ -x "$(command -v kibana)" ]; then
-  echo 'Installing Kibana'
-  sudo apt-get install openjdk-8-jdk -y
-  sudo apt install kibana
-else
-  echo 'Kibana is already installed'
+# This section will run the configure.bash file within a condition variable
+# If the condition variable is set to true, the configure.bash file will be run
+# If the condition variable is not set to true, the configure.bash file will not be run
+
+if [ -n "$CONFIGURE_ELASTICSEARCH" ]; then
+    ./configure.bash
 fi
 
-# Conditional to install logstash if it is not already installed
-if ! [ -x "$(command -v logstash)" ]; then
-  echo 'Installing Logstash'
-  sudo apt-get install openjdk-8-jdk -y
-  sudo apt-get install logstash -y
-else
-  echo 'Logstash is already installed'
+# This section will run the start.bash file within a condition variable
+# If the condition variable is set to true, the start.bash file will be run
+# If the condition variable is not set to true, the start.bash file will not be run
+# This will ask the user if they would like to start the ELK Stack
+
+echo " Would you like to start the application? (y/n)"
+read start_response
+
+if [ "$start_response" = "y" ]; then
+    ./start.bash
 fi
 
-# Conditional to install filebeat if it is not already installed
-if ! [ -x "$(command -v filebeat)" ]; then
-  echo 'Installing Filebeat'
-  sudo apt-get install openjdk-8-jdk -y
-else
-  echo 'Filebeat is already installed'
-fi
+# This section will run the stop.bash file within a condition variable
+# If the condition variable is set to true, the stop.bash file will be run
+# If the condition variable is not set to true, the stop.bash file will not be run
+# This will ask the user if they would like to stop the ELK Stack
 
-# Conditional to install metricbeat if it is not already installed
-if ! [ -x "$(command -v metricbeat)" ]; then
-  echo 'Installing Metricbeat'
-  sudo apt-get install openjdk-8-jdk -y
-else
-  echo 'Metricbeat is already installed'
+echo " Would you like to stop the application? (y/n)"
+read stop_response
+
+if [ "$stop_response" = "y" ]; then
+    ./stop.bash
 fi
