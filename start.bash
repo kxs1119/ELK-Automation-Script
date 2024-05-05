@@ -1,39 +1,45 @@
-: << 'Comment'
-This script will be used to test the ELK stack by starting and intergrating thethe following:
-Kibana
-Elasticsearch
-Logstash
+#!/bin/bash
 
-References: https://stackoverflow.com/questions/12199059/how-to-check-if-an-url-exists-with-the-shell-and-probably-curl
-Comment
+# This script will be used to test the ELK stack by starting and integrating the following:
+# Kibana
+# Elasticsearch
+# Logstash
 
-
-# This section will test Elasticsearch by starting elasticsearch
-# Create a conditional statement to check that elasticsearch is running prior to starting Kibana
-if [curl --output /dev/null --silent --head --fail http://localhost:9200]; then
-    echo "Elasticsearch is not running"
-    exit 1
+# Test Elasticsearch by checking if it's accessible
+if curl --output /dev/null --head --fail http://localhost:9200; then
+    echo "Elasticsearch is already running"
 else
-    sudo systemctl start elasticsearch
-    sudo systemctl status elasticsearch
+    echo "Elasticsearch is not running, starting..."
+    sudo docker run --name elasticsearch -d -p 9200:9200 -p 9300:9300 docker.elastic.co/elasticsearch/elasticsearch:7.17.20
+    sleep 10 # Wait for Elasticsearch to start
+    sudo docker ps -a # Display running containers for verification
+fi
 
-# This section will test Kibana by starting Kibana
-# Create a conditional statement to check that elasticsearch is running prior to starting Kibana
-if [curl --output /dev/null --silent --head --fail http://localhost:9200]; then
-    echo "Elasticsearch is not running"
-    exit 1
+# Test Kibana by checking if Elasticsearch is accessible
+if curl --output /dev/null --head --fail http://localhost:9200; then
+    echo "Kibana is not running"
 else
-    sudo systemctl start kibana
-    sudo systemctl status kibana
+    echo "Kibana is not running, starting..."
+    sudo docker run --name kibana -d -p 5601:5601 docker.elastic.co/kibana/kibana:7.17.20
+    sleep 10 # Wait for Kibana to start
+    sudo docker ps -a # Display running containers for verification
+fi
 
-# This section will test Logstash by starting Logstash
-# Create a conditional statement to check that elasticsearch is running prior to starting Logstash
-if [curl --output /dev/null --silent --head --fail http://localhost:9200]; then
-    echo "Elasticsearch is not running"
-    exit 1
+# Test Logstash by checking if Elasticsearch is accessible
+if curl --output /dev/null --head --fail http://localhost:9200; then
+    echo "Logstash is not running"
 else
-    sudo systemctl start logstash
-    sudo systemctl status logstash
+    echo "Logstash is not running, starting..."
+    sudo docker run --name logstash -d docker.elastic.co/logstash/logstash:7.17.20
+    sleep 10 # Wait for Logstash to start
+    sudo docker ps -a # Display running containers for verification
+fi
 
-
-
+# Test Filebeat by checking if Elasticsearch is accessible
+if curl --output /dev/null --head --fail http://localhost:9200; then
+    echo "Filebeat is not running"
+else
+    echo "Filebeat is not running, starting..."
+    sudo docker run --name filebeat -d docker.elastic.co/beats/filebeat:7.17.20
+    sleep 10 # Wait for Filebeat to start
+    sudo docker ps -a # Display running containers for verification
